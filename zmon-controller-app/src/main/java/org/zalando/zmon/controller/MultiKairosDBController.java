@@ -4,11 +4,13 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.SettableListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.AsyncRestTemplate;
@@ -91,6 +93,26 @@ public class MultiKairosDBController extends AbstractZMonController {
                 long start = q.get("start_absolute").asLong();
                 start = start - (start % 60000);
                 q.put("start_absolute", start);
+
+                /* 
+                long end = System.currentTimeMillis();
+                if (q.has("end_absolute")) {
+                    end = q.get("end_absolute").asLong();
+                }
+                if (end <= start) {
+                     ObjectNode err = new ObjectNode(JsonNodeFactory.instance);
+                     err.put("error", "end before start");
+                     SettableListenableFuture slf = new SettableListenableFuture();
+                     slf.set(new ResponseEntity(err, HttpStatus.BAD_REQUEST));
+                     return slf;
+                } else if ((end - start) > 90 * 86400 * 1000L) { // FIXME
+                     ObjectNode err = new ObjectNode(JsonNodeFactory.instance);
+                     err.put("error", "query span too long");
+                     SettableListenableFuture slf = new SettableListenableFuture();
+                     slf.set(new ResponseEntity(err, HttpStatus.BAD_REQUEST));
+                     return slf;
+                }
+                */
             }
             else if (q.has("start_relative")) {
                 if(queryWindow != 0) {
@@ -114,8 +136,8 @@ public class MultiKairosDBController extends AbstractZMonController {
         ListenableFuture<ResponseEntity<JsonNode>> lf = asyncRestTemplate.exchange(kairosdbServices.get(kairosDB).getUrl() + QUERY_SUFFIX, HttpMethod.POST,
                 httpEntity, JsonNode.class);
         lf.addCallback(new StopTimerCallback(timer));
-
         return lf;
+
     }
 
     @RequestMapping(value = "{kairosdbId}/api/v1/datapoints/query/tags", method = RequestMethod.POST, produces = "application/json")

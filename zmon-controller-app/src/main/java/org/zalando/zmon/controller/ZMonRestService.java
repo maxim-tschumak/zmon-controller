@@ -3,6 +3,9 @@ package org.zalando.zmon.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+
 import com.google.common.collect.Lists;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
@@ -184,13 +187,19 @@ public class ZMonRestService extends AbstractZMonController {
         return new ResponseEntity<>(cr, HttpStatus.OK);
     }
 
+    private JsonNode errorJson(String msg) {
+        ObjectNode err = new ObjectNode(JsonNodeFactory.instance);
+        err.put("error", msg);
+        return err;
+    }
+
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @RequestMapping(value = "alertCoverage", method = RequestMethod.POST)
     public ResponseEntity<JsonNode> getAlertCoverage(@RequestBody JsonNode filter) {
         JsonNode node = service.getAlertCoverage(filter);
         if (null == node) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(errorJson("result was null, try limiting result by adding more filters"), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(node, HttpStatus.OK);
     }
