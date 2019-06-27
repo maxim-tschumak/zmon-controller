@@ -25,6 +25,11 @@ public class ZMonSProcServiceConfig {
     }
 
     @Bean(autowire = Autowire.BY_TYPE)
+    public AlertStatisticsSProcService getAlertStatisticsSProcService() {
+        return SProcProxyBuilder.build(dataSourceProvider, AlertStatisticsSProcService.class);
+    }
+
+    @Bean(autowire = Autowire.BY_TYPE)
     public DashboardSProcService getDashboardSProcService() {
         return SProcProxyBuilder.build(dataSourceProvider, DashboardSProcService.class);
     }

@@ -138,6 +138,15 @@ angular.module('zmon2App').factory('CommunicationService', ['$http', '$q', '$log
             return doHttpCall("GET", "rest/alertDetails", params);
         };
 
+        service.getAlertStatistics = function(alertId) {
+            PreconditionsService.isNotEmpty(alertId);
+            PreconditionsService.isNumber(alertId);
+            var params = {
+                "alert_id": alertId
+            };
+            return doHttpCall("GET", "rest/alertStatistics", params);
+        }
+
         /*
          * Returns check results for passed checkId with optional limitCount & entityId filter
          */

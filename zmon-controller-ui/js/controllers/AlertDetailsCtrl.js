@@ -21,7 +21,7 @@ angular.module('zmon2App').controller('AlertDetailsCtrl', [ '$location', '$route
     $scope.allAlerts = [];
     $scope.downtimes = [];
     $scope.downtimeEntities = [];
-
+    $scope.alertStats = {};
     $scope.commentsCount = 0;
 
     $scope.selection = {
@@ -135,6 +135,10 @@ angular.module('zmon2App').controller('AlertDetailsCtrl', [ '$location', '$route
                     });
                 });
             });
+            CommunicationService.getAlertStatistics($scope.alertId).then(function(stats) {
+                console.log(stats);
+                $scope.alertStats = stats;
+            })
             CommunicationService.getAlertDefinitionChildren($scope.alert.id).then(function(children) {
                 $scope.alert.children = children;
             });

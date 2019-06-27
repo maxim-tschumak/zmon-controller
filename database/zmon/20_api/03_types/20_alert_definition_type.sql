@@ -17,5 +17,6 @@ CREATE TYPE alert_definition_type AS (
     template            boolean,
     parent_id           int,
     parameters          hstore,
-    tags                text[]
+    tags                text[],
+    false_positive_rate real
 );

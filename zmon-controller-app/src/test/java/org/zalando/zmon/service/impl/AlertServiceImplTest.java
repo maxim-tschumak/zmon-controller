@@ -14,7 +14,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.zalando.zmon.domain.Alert;
 import org.zalando.zmon.domain.AlertDefinition;
+import org.zalando.zmon.domain.AlertStatistics;
 import org.zalando.zmon.persistence.AlertDefinitionSProcService;
+import org.zalando.zmon.persistence.AlertStatisticsSProcService;
 import org.zalando.zmon.security.permission.DefaultZMonPermissionService;
 import org.zalando.zmon.util.NamedMessageFormatter;
 import redis.clients.jedis.*;
@@ -44,6 +46,7 @@ public class AlertServiceImplTest {
     @Mock private NoOpEventLog eventLog;
     @Mock private DefaultZMonPermissionService authorityService;
     @Mock private AlertDefinitionSProcService alertDefinitionSProc;
+    @Mock private AlertStatisticsSProcService alertStatisticsSProc;
     @Mock private ObjectMapper mapper;
     @Mock private NamedMessageFormatter messageFormatter;
     @Mock private MetricRegistry metricRegistry;

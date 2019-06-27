@@ -7,12 +7,7 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import org.zalando.zmon.domain.Alert;
-import org.zalando.zmon.domain.AlertComment;
-import org.zalando.zmon.domain.AlertDefinition;
-import org.zalando.zmon.domain.AlertDefinitions;
-import org.zalando.zmon.domain.AlertDefinitionsDiff;
-import org.zalando.zmon.domain.DefinitionStatus;
+import org.zalando.zmon.domain.*;
 import org.zalando.zmon.exception.ZMonException;
 
 public interface AlertService {
@@ -60,4 +55,8 @@ public interface AlertService {
     List<String> getAllTags();
 
     Date getMaxLastModified();
+
+    AlertStatistics getAlertStatisticsById(int alertId);
+
+    AlertStatistics updateAlertStatistics(AlertStatistics stats);
 }

@@ -25,6 +25,7 @@ import org.zalando.zmon.exception.SerializationException;
 import org.zalando.zmon.exception.ZMonException;
 import org.zalando.zmon.persistence.AlertDefinitionOperationResult;
 import org.zalando.zmon.persistence.AlertDefinitionSProcService;
+import org.zalando.zmon.persistence.AlertStatisticsSProcService;
 import org.zalando.zmon.redis.RedisPattern;
 import org.zalando.zmon.redis.ResponseHolder;
 import org.zalando.zmon.security.permission.DefaultZMonPermissionService;
@@ -63,6 +64,9 @@ public class AlertServiceImpl implements AlertService {
 
     @Autowired
     protected AlertDefinitionSProcService alertDefinitionSProc;
+
+    @Autowired
+    protected AlertStatisticsSProcService alertStatisticsSProc;
 
     @Autowired
     protected DefaultZMonPermissionService authorityService;
@@ -632,5 +636,15 @@ public class AlertServiceImpl implements AlertService {
     private static long parseRedisSmembersCount() {
         final String smembersCount = System.getenv("REDIS_SMEMBERS_COUNT");
         return smembersCount == null ? 1000 : Long.parseLong(smembersCount);
+    }
+
+    @Override
+    public AlertStatistics getAlertStatisticsById(final int alertId) {
+        return alertStatisticsSProc.getAlertStatistics(alertId);
+    }
+
+    @Override
+    public AlertStatistics updateAlertStatistics(AlertStatistics stats) {
+        return new AlertStatistics();
     }
 }
